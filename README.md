@@ -16,4 +16,4 @@ Here is the pipeline of the script:
 When you try to execute the `xelatex` command, make sure you have the `xelatex` binary executable in the `PATH`:
 `export PATH=/usr/local/texlive/2014/bin/x86_64-darwin/:$PATH`
 
-Also, you need to follow [these instructions](http://gspread.readthedocs.org/en/latest/oauth2.html#custom-credentials-objects) to enable the access of the Google SpreadSheet. Then, make sure you have **shared the Google SpreadSheet with the email address given in the `PrintQuestions-***.json`**
+Also, you need to follow [these instructions](http://gspread.readthedocs.org/en/latest/oauth2.html#custom-credentials-objects) to enable the access of the Google SpreadSheet. Then, make sure you have shared the Google SpreadSheet with the email address given in the `PrintQuestions-***.json`
