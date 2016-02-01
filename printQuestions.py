@@ -20,6 +20,7 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 # Need to update the path for xeLatex
+# export PATH=/usr/local/texlive/2014/bin/x86_64-darwin/:$PATH
 PREAMBULE_FILE = "preambule.tex"
 PRINTER_NAME = "Cristal___Imprimante_NPA__Noir_et_Blanc____hera_lip6_fr"
 TMP_LATEX_FILE = "tmp"
@@ -49,7 +50,7 @@ def generate_latex_preambule(date, answers):
 \\firstpagefooter{{}}{{\\thepage\ sur \\numpages}}{{}}
 \\runningfooter{{}}{{\\thepage\ sur \\numpages}}{{}}
 
-{{\Huge \\textsf{{\\textbf{{LI320}} Ingénierie des réseaux}}\\\\[15pt]}}%
+{{\Huge \\textsf{{\\textbf{{3I 023}} Ingénierie des réseaux}}\\\\[15pt]}}%
 \\begin{{minipage}}{{.59\linewidth}}
 \\begin{{flushleft}}\leavevmode
     {{\Large \\textsf{{Évaluation}}\\\\[2pt]}}%
@@ -69,7 +70,7 @@ def generate_latex_preambule(date, answers):
     return str.decode('utf-8')
 
 
-def generate_latex_file(output, questions, answers, print_answers, exam_date):
+def generate_latex_file(output, questions, print_answers, exam_date):
     """
     Generate the latex file from the questions and the answers lists.
     If the answers list is empty, then do not print the answers
@@ -86,13 +87,14 @@ def generate_latex_file(output, questions, answers, print_answers, exam_date):
     f.write(u"\\begin{questions}\n")
     # print the questions
     for i in range(len(questions)):
+        question_cours = '(Cours) ' if questions[i]['c'] else ''
         str = u"""
-    \\question
+    \\question {question_cours}
     {question}
     \\begin{{solutionordottedlines}}[0.55in]
         {answer}
     \\end{{solutionordottedlines}}
-""".format(question=questions[i], answer=answers[i])
+""".format(question_cours=question_cours,question=questions[i]['q'], answer=questions[i]['a'])
         f.write(unicode(str))
     f.write(u"\\end{questions}\n\n\\end{document}")
 
@@ -113,18 +115,24 @@ def get_questions(sheet_idx):
 
     wks = gc.open_by_key(sheet_key).get_worksheet(int(sheet_idx)-1)
 
-    questions = dict((i, q) for (i, q) in enumerate(wks.col_values(1)[1:]) if q)
-    answers   = dict((i, a) for (i, a) in enumerate(wks.col_values(2)[1:]) if a)
+    records = []
+    for (i, v) in enumerate(wks.get_all_values()[1:]):
+        if v:
+            records.append({
+                'q': v[0],
+                'a': v[3],
+                'td': v[2],
+                'c': True if v[1] == '1' else False
+            })
 
-    return questions, answers
+    return records
 
-
-def choose_questions(nrof_questions, nrof_exams, questions):
+def choose_questions(nrof_questions, nrof_exams, td_group, records):
     # Choose the questions to include in the file
     questions_results = {}
     for i in range(int(nrof_exams)):
         questions_results[i] = []
-        question_set = set(questions.keys())
+        question_set = set(dict(enumerate(rec for rec in records if rec['td'] in [td_group,''])).keys())
         for j in range(int(nrof_questions)):
             # get a random question
             q = random.choice(list(question_set))
@@ -158,6 +166,7 @@ def get_options():
     optParser.add_option("-d",  action="store", dest='date', help='Date of the exam')
     optParser.add_option("-n",  action="store", dest='exam_number', help='Number of exams')
     optParser.add_option("-q",  action="store", dest='questions_number', help='Number of questions')
+    optParser.add_option("-t",  action="store", dest='td_group', help='TD group')
 
     options, args = optParser.parse_args()
     return options
@@ -185,16 +194,16 @@ def main():
     date_exam   = options.date
     exam_number = options.exam_number
     questions_number = options.questions_number
+    td_group = options.td_group
 
     output = PdfFileWriter()
 
-    q, a = get_questions(sheet_idx)
-    res = choose_questions(questions_number, exam_number, q)
+    records = get_questions(sheet_idx)
+    res = choose_questions(questions_number, exam_number, td_group, records)
 
     for i, questions_idx in res.items():
-        questions = [q[idx] for idx in questions_idx]
-        answers   = [a[idx] for idx in questions_idx]
-        generate_latex_file(TMP_LATEX_FILE+".tex", questions, answers, False, date_exam)
+        questions = [records[idx] for idx in questions_idx]
+        generate_latex_file(TMP_LATEX_FILE+".tex", questions, False, date_exam)
         compile_latex_file(TMP_LATEX_FILE+".tex")
         append_pdf(PdfFileReader(file(TMP_LATEX_FILE+".pdf", "rb")), output)
 
@@ -202,11 +211,13 @@ def main():
         remove_latex_files(TMP_LATEX_FILE)
 
     output.write(file(OUTPUT_FILE, "wb"))
-    print_file(OUTPUT_FILE)
+    # print_file(OUTPUT_FILE)
+
 
 
 if __name__ == '__main__':
     main()
 
 # run the command
-# python printQuestions.py -c 1 -n 3 -q 10 -d "Semaine du 3 fevrier"
+# export PATH=/usr/local/texlive/2014/bin/x86_64-darwin/:$PATH
+# python printQuestions.py -c 1 -n 3 -q 10 -d "Semaine du 3 février"
