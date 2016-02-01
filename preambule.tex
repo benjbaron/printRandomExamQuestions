@@ -1,0 +1,115 @@
+\documentclass[11pt]{exam}
+\usepackage{fontspec}
+\usepackage[frenchb]{babel}
+\RequirePackage{amssymb, amsfonts, amsmath, latexsym, verbatim, xspace, setspace}
+\RequirePackage{tikz, pgflibraryplotmarks}
+\usepackage{float}
+\usepackage[a4paper]{geometry}
+\usepackage[vlined]{algorithm2e}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{url}
+\usepackage[super]{nth}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{caption}
+\usepackage{fancyvrb}
+\usepackage{subcaption} 
+\usepackage{array}
+\usepackage{color, colortbl}
+\usepackage{multirow}
+\usepackage{filecontents,microtype}
+\usepackage{tabularx}
+\usepackage{cprotect}
+\usepackage{booktabs}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2cm,rmargin=2.5cm,headheight=.5cm,footskip=1cm}
+\usepackage[unicode=true, pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+ \usepackage{multicol}
+ 
+ \usetikzlibrary{calc,positioning,shapes,shadows,arrows,fit,decorations.pathreplacing,backgrounds,shapes,patterns}
+ \newcommand\tikzmark[2]{%
+   \tikz[remember picture,overlay,baseline]\node[anchor=base west,inner sep=0,opacity=0] (#1) {#2};}
+
+% By default LaTeX uses large margins.  This doesn't work well on exams; problems
+% end up in the "middle" of the page, reducing the amount of space for students
+% to work on them.
+
+\shadedsolutions
+\definecolor{SolutionColor}{rgb}{0.902,0.933,0.988}
+\renewcommand{\solutiontitle}{}
+
+% \setlist{leftmargin=*}
+\setlength{\parskip}{\medskipamount}
+\setlength{\itemsep}{1pt}
+  \setlength{\parsep}{0pt}
+  
+\definecolor{gray75}{gray}{0.75}
+\definecolor{gray50}{gray}{0.50}
+\newcommand{\hsp}{\hspace{0.2em}}
+
+\newcommand*\Pitem{%
+  \item[\color{green}\scalebox{0.9}{\textbullet}]}
+\newcommand*\Citem{%
+  \item[\color{red}\scalebox{0.9}{\textbullet}]}
+
+\singlespacing
+\parindent 0ex
+
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
+\newcolumntype{R}[1]{>{\hsize=#1\hsize\raggedleft\arraybackslash}X}%
+\newcolumntype{C}[2]{>{\hsize=#1\hsize\columncolor{#2}\centering\arraybackslash}X}%
+
+\renewcommand{\questionlabel}{\textsf{Q\textbf{\thequestion.}}}
+\renewcommand{\questionshook}{%
+\setlength{\leftmargin}{0pt}%
+\setlength{\labelwidth}{-\labelsep}%
+}
+
+\makeatletter
+%%% Custom sectioning (titlesec package)
+\usepackage{titlesec}
+\titleformat{\section}%
+  [hang]% shape
+  {\normalfont\Large\itshape}% format applied to label+text
+  {\llap{\hspace*{-20pt}\thesection\hsp\textcolor{gray50}{|}\hsp}}% label
+  {0pt}% horizontal separation between label and title body
+  {}% before the title body
+  []% after the title body
+\makeatother
+ 
+%This is ShareLaTeX Specific (or if the fonts are not installed in your system)
+%-----------------------------------------------------------------------
+
+% Minion Pro
+\setromanfont[
+Path=fonts/,
+Ligatures=TeX,
+FeatureFile={minion.fea},
+BoldFont=MinionPro-Bold.otf,
+ItalicFont=MinionPro-It.otf,
+BoldItalicFont=MinionPro-BoldIt.otf,
+]{MinionPro-Regular.otf}
+
+% Helvetica Neue Pro
+\setsansfont[
+Path=fonts/,
+Ligatures=TeX,
+BoldFont=HelveticaNeueLTPro-Md.otf,
+ItalicFont=HelveticaNeueLTPro-LtIt.otf,
+BoldItalicFont=HelveticaNeueLTPro-MdIt.otf
+]{HelveticaNeueLTPro-Lt.otf}
+
+% Menlo
+\setmonofont[
+Path=fonts/,
+Scale=0.75,
+BoldFont=Menlo-Bold.ttf,
+ItalicFont=Menlo-Italic.ttf,
+BoldItalicFont=Menlo-BoldItalic.ttf
+]{Menlo-Regular.ttf}
+
+%-----------------------------------------------------------------------
+\frenchspacing
